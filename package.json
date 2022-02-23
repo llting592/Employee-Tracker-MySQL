@@ -1,0 +1,23 @@
+{
+  "dependencies": {
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.3"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "employee-tracker-mysql",
+  "version": "1.0.0",
+  "description": "employee tracker using mysql",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/llting592/Employee-Tracker-MySQL.git"
+  },
+  "author": "Lloyd Ting",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/llting592/Employee-Tracker-MySQL/issues"
+  },
+  "homepage": "https://github.com/llting592/Employee-Tracker-MySQL#readme"
+}
