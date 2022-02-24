@@ -1,10 +1,10 @@
-// List the dependencies here.
 const mysql = require('mysql');
 const inquirer = require('inquirer');
-const consoleTable = require('console.table');
+const cTable = require('console.table');
 const util = require('util');
+const express = require('express');
 
-// Create the connection to MySQL WorkBench
+//Workbench connection
 let connection = mysql.createConnection({
     host: 'localhost',
     port: 3306,
@@ -15,19 +15,19 @@ let connection = mysql.createConnection({
 
 connection.query = util.promisify(connection.query);
 
-// Begin the application after establishing the connection.
 connection.connect(function (err) {
     if (err) throw err;
-    initialAction();
+    console.log("Connected!")
+    initialMenu();
 })
 
-// Give the user a pleasant welcome message.
+
 console.table(
     "\n------------ EMPLOYEE TRACKER ------------\n"
 )
 
-// Ask the user initial action question to figure out what they would like to do.
-const initialAction = async () => {
+//Initial menu
+const initialMenu = async () => {
     try {
         let answer = await inquirer.prompt({
             name: 'action',
@@ -46,15 +46,15 @@ const initialAction = async () => {
         });
         switch (answer.action) {
             case 'View Employees':
-                employeeView();
+                viewEmployees();
                 break;
 
             case 'View Departments':
-                departmentView();
+                viewDepartment();
                 break;
 
             case 'View Roles':
-                roleView();
+                viewRole();
                 break;
 
             case 'Add Employees':
@@ -62,15 +62,15 @@ const initialAction = async () => {
                 break
 
             case 'Add Departments':
-                departmentAdd();
+                addDepartment();
                 break
 
             case 'Add Roles':
-                roleAdd();
+                addRole();
                 break
 
             case 'Update Employee Role':
-                employeeUpdate();
+                updateEmployee();
                 break
 
             case 'Exit':
@@ -79,13 +79,13 @@ const initialAction = async () => {
         };
     } catch (err) {
         console.log(err);
-        initialAction();
+        initialMenu();
     };
 }
 
-// Selection to view all of the employees.
-const employeeView = async () => {
-    console.log('Employee View');
+//view all employees
+const viewEmployees = async () => {
+    console.log('View Employees');
     try {
         let query = 'SELECT * FROM employee';
         connection.query(query, function (err, res) {
@@ -93,16 +93,16 @@ const employeeView = async () => {
             let employeeArray = [];
             res.forEach(employee => employeeArray.push(employee));
             console.table(employeeArray);
-            initialAction();
+            initialMenu();
         });
     } catch (err) {
         console.log(err);
-        initialAction();
+        initialMenu();
     };
 }
 
-// Selection to view all of the departments.
-const departmentView = async () => {
+//view all departments 
+const viewDepartment = async () => {
     console.log('Department View');
     try {
         let query = 'SELECT * FROM department';
@@ -111,16 +111,16 @@ const departmentView = async () => {
             let departmentArray = [];
             res.forEach(department => departmentArray.push(department));
             console.table(departmentArray);
-            initialAction();
+            initialMenu();
         });
     } catch (err) {
         console.log(err);
-        initialAction();
+        initialMenu();
     };
 }
 
-// Selection to view all of the roles.
-const roleView = async () => {
+//View all roles
+const viewRole = async () => {
     console.log('Role View');
     try {
         let query = 'SELECT * FROM role';
@@ -129,15 +129,15 @@ const roleView = async () => {
             let roleArray = [];
             res.forEach(role => roleArray.push(role));
             console.table(roleArray);
-            initialAction();
+            initialMenu();
         });
     } catch (err) {
         console.log(err);
-        initialAction();
+        initialMenu();
     };
 }
 
-// Selection to add a new employee.
+//Add new employees
 const employeeAdd = async () => {
     try {
         console.log('Employee Add');
@@ -189,18 +189,18 @@ const employeeAdd = async () => {
         });
 
         console.log(`${answer.firstName} ${answer.lastName} added successfully.\n`);
-        initialAction();
+        initialMenu();
 
     } catch (err) {
         console.log(err);
-        initialAction();
+        initialMenu();
     };
 }
 
-// Selection to add a new department.
-const departmentAdd = async () => {
+//Add new dept
+const addDepartment = async () => {
     try {
-        console.log('Department Add');
+        console.log('Add Dept');
 
         let answer = await inquirer.prompt([
             {
@@ -215,16 +215,16 @@ const departmentAdd = async () => {
         });
 
         console.log(`${answer.deptName} added successfully to departments.\n`)
-        initialAction();
+        initialMenu();
 
     } catch (err) {
         console.log(err);
-        initialAction();
+        initialMenu();
     };
 }
 
-// Selection to add a new role.
-const roleAdd = async () => {
+//Add new role.
+const addRole = async () => {
     try {
         console.log('Role Add');
 
@@ -267,16 +267,16 @@ const roleAdd = async () => {
         })
 
         console.log(`${answer.title} role added successfully.\n`)
-        initialAction();
+        initialMenu();
 
     } catch (err) {
         console.log(err);
-        initialAction();
+        initialMenu();
     };
 }
 
-// Selection to update a roll for a specific employee.
-const employeeUpdate = async () => {
+//Update role for a specific employee.
+const updateEmployee = async () => {
     try {
         console.log('Employee Update');
         
@@ -315,10 +315,12 @@ const employeeUpdate = async () => {
         let result = await connection.query("UPDATE employee SET ? WHERE ?", [{ role_id: roleSelection.role }, { id: employeeSelection.employee }]);
 
         console.log(`The role was successfully updated.\n`);
-        initialAction();
+        initialMenu();
 
     } catch (err) {
         console.log(err);
-        initialAction();
+        initialMenu();
     };
 }
+
+//to do- add delete employee and dept
